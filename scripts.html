@@ -20,42 +20,42 @@
 			<h3>Your giant JPG are slowing down my e-mail and ppt, stop it!!!</h3>
 			<br>
 			<pre><code> 
-				import os
-				from PIL import Image
+		import os
+		from PIL import Image
 
-				def decrease_size():
-				    '''
-				    the script will search the read path for *.jpg files
-				    it will reduce the size of the found jpg files to a widht of basewidth
-				    the resulting file will be written to the write parth
-				    the new file name will be appended with basewidth
-				    the read path and write path must already exist
-				    '''
-				    
-				    readPath = '/home/scott/Desktop/scripts/photos/read_path/'
-				    writePath = '/home/scott/Desktop/scripts/photos/write_path/'
-				  
-				    listing = os.listdir(readPath)
-				    basewidth = 1000
-				    
-				    for fl in listing:
-					if fl[-3:] != 'jpg':
-					    continue
-					else:
-					    x = (readPath + fl)
-					    y = writePath + fl[:-4] + '_' + str(basewidth) + '_.jpg'
-					    img = Image.open(x)
-					    height = img.height
-					    wpercent = basewidth / float(img.width)
-					    newheight = int(height * wpercent)
-					    img = img.resize((basewidth, newheight))
-					    img.save(y)
-					    img.close()
+		def decrease_size():
+		    '''
+		    the script will search the read path for *.jpg files
+		    it will reduce the size of the found jpg files to a widht of basewidth
+		    the resulting file will be written to the write parth
+		    the new file name will be appended with basewidth
+		    the read path and write path must already exist
+		    '''
+		    
+		    readPath = '/home/scott/Desktop/scripts/photos/read_path/'
+		    writePath = '/home/scott/Desktop/scripts/photos/write_path/'
+		  
+		    listing = os.listdir(readPath)
+		    basewidth = 1000
+		    
+		    for fl in listing:
+			if fl[-3:] != 'jpg':
+			    continue
+			else:
+			    x = (readPath + fl)
+			    y = writePath + fl[:-4] + '_' + str(basewidth) + '_.jpg'
+			    img = Image.open(x)
+			    height = img.height
+			    wpercent = basewidth / float(img.width)
+			    newheight = int(height * wpercent)
+			    img = img.resize((basewidth, newheight))
+			    img.save(y)
+			    img.close()
 
-				    print('end of routine')   
+		    print('end of routine')   
 
 
-				decrease_size()
+		decrease_size()
 				</pre>
 				</code>
 
