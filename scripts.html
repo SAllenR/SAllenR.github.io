@@ -18,47 +18,108 @@
     		<div class="blurb">
         		<h1>Crush that photo!</h1>
 			<h3>Your giant JPG are slowing down my e-mail and ppt, stop it!!!</h3>
-			<pre><code> 
-		import os
+			<pre>
+			<code> 
+		#jpg_smash.py
+		#python3
+
+		from tkinter import filedialog
+		from tkinter import *
 		from PIL import Image
+		import os
 
-		def decrease_size():
-		    '''
-		    the script will search the read path for *.jpg files
-		    it will reduce the size of the found jpg files to a widht of basewidth
-		    the resulting file will be written to the write parth
+		'''
+		    the script will use a file open dialog or search the read path for *.jpg files
+		    it will reduce the size of the found jpg files to a width of basewidth
+		    the resulting file will be written to the write path (multiple files) or the source path (single image)
 		    the new file name will be appended with basewidth
-		    the read path and write path must already exist
-		    '''
-		    
-		    readPath = '/your/file/path/here/read_path/'
-		    writePath = '/your/file/path/here/write_path/'
-		  
-		    listing = os.listdir(readPath)
-		    basewidth = 1000
-		    
-		    for fl in listing:
-			if fl[-3:] != 'jpg':
-			    continue
-			else:
-			    x = (readPath + fl)
-			    y = writePath + fl[:-4] + '_' + str(basewidth) + '_.jpg'
-			    img = Image.open(x)
-			    height = img.height
-			    wpercent = basewidth / float(img.width)
-			    newheight = int(height * wpercent)
-			    img = img.resize((basewidth, newheight))
-			    img.save(y)
-			    img.close()
+		'''
 
+
+		def getFile():
+		    '''dialog box to select single file'''
+		    root = Tk()
+		    print ('\nSelect File to read.\n')
+		    root.filename =  filedialog.askopenfilename(initialdir = "/home/scott/Desktop/",title = "Select file",filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
+		    root.destroy()
+		    return root.filename    
+
+		def getReadPath():
+		    '''dialog box to select directory to read from'''
+		    root = Tk()
+		    print ('\nSelect Directory to read.\n')
+		    readPath = filedialog.askdirectory()+ '/'
+		    root.destroy()
+		    print('\n\tdirectory selected: ' + readPath + '\n')
+		    return readPath
+
+		def getWritePath():
+		    '''dialog box to designate directory to write to'''
+		    root = Tk()
+		    print ('\nSelect Directory to write.\n')
+		    writePath = filedialog.askdirectory() + '/'
+		    root.destroy()
+		    print('\n\tdirectory selected: ' + writePath+ '\n')
+		    return writePath
+
+		def smash(img, basewidth, n = 'on file'):
+		    '''reduce height and width of img to reduce file size'''
+		    print ('working: ' + n)
+		    height = img.height
+		    wpercent = basewidth / float(img.width)
+		    newheight = int(height * wpercent)
+		    img = img.resize((basewidth, newheight))
+		    return img
+
+		def decrease_size_single(basewidth):
+		    '''select and modify a single file'''
+		    photo = getFile()    
+		    y = photo[:-4] + '_' + str(basewidth) + '_.jpg'
+		    img = Image.open(photo)
+		    img = smash(img, basewidth, y)
+		    img.save(y)    
+		    img.close()
 		    print('end of routine')   
 
+		def decrease_size_directory(basewidth):
+		    '''modify all jpg in a selected directory'''
+		    count = 0
+		    readPath = getReadPath()
+		    writePath = getWritePath()
 
-		decrease_size()
-				</pre>
-				</code>
+		    listing = os.listdir(readPath)
+
+		    for fileName in listing:
+			if fileName[-3:] != 'jpg':
+			    continue
+			else:
+			    x = (readPath + fileName)
+			    y = writePath + fileName[:-4] + '_' + str(basewidth) + '_.jpg'
+			    img = Image.open(x)
+			    img = smash(img, basewidth, y)            
+			    img.save(y)
+			    img.close()
+			    count += 1
+
+		    print('end of routine ' + str(count) + ' files reduced')
 
 
+		if __name__ == "__main__":
+		    basewidth = int(input('\nFiles names are appended with the base width.\nAspect ratio will not change.\nEnter desired basewidth:  '))
+
+		    test = input('\n Single file or all files in a directory? (Enter s or a)')
+
+		    if test  == 's':
+			decrease_size_single(basewidth)
+
+		    if test == 'a':
+			decrease_size_directory(basewidth)
+
+		    if test not in ('s', 'a'):
+			print ('next try, enter s or a')
+
+			</pre>
+			</code>
     		</div><!-- /.blurb -->
 		</div><!-- /.container -->
                 <footer>
